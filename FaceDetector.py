@@ -18,8 +18,24 @@ while True:
         break
 
     _,frame = video.read()
+    gray =cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+    faces = face_cascade.detectMultiscale(
+        gray,
+        scaleFactor = 1.3,
+        minNeighbors = 7,
+        minSize = (50,50)
+    )
+    
+    #draw rectangles
+    for(x,y,w,h) in faces:
+        cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2)
 
     #update image
     imgbytes = cv2.imencode('.png',frame)[1].tobytes()
     window['-IMAGE-'].update(data = imgbytes)
+
+    #update how many faces
+    window['-TEXT-'].update(f'ppl in pciture: {len(faces)}')
+
+
 window.close()
